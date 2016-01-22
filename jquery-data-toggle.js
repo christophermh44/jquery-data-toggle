@@ -1,7 +1,6 @@
 ;(function($){
   'use strict';
-	$(document).on('mouseup', '[data-toggle]', function(e) {
-		var $target = $(e.target);
+	$(document).on('click', '[data-toggle]', function(e) {
 		e.preventDefault();
 		$that = $(this);
 		var $el = $(this).attr('data-toggle');
