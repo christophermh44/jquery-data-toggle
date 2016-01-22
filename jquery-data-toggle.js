@@ -2,9 +2,6 @@
   'use strict';
 	$(document).on('mouseup', '[data-toggle]', function(e) {
 		var $target = $(e.target);
-		if ($target.is('a') || $target.parent().is('a')) { // fallback pour les options des dossiers
-			return;
-		}
 		e.preventDefault();
 		$that = $(this);
 		var $el = $(this).attr('data-toggle');
