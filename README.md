@@ -51,4 +51,18 @@ Now, if you don't see any change when you click on an element that have data-tog
   * Your selector is bad or doesn't target anything
   * You didn't noticed that data-toggle isn't using show() and hide() functions of jQuery, but simply add and remove the class "active" from the toggle element and the targeted ones.
   
-  Enjoy!
+Enjoy!
+
+## Todo
+
+  * Trigger custom event if needed, by adding an attribute like that:
+  
+  ```html
+  <button type="button" data-toggle="#menu" data-toggle-event="open-menu">Open menu</button>
+  ...
+  <script>
+  $(???).on('open-menu', function(e){
+    // ...
+  });
+  </script>
+  ```
