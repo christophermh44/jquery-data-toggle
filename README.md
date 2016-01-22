@@ -47,6 +47,12 @@ A very small lib that allows some elements to toggle other ones.
   ...
   ```
   
+  **Brotip #2**: If you want to close all opened elements by clicking on the body, just add this to the body:
+  
+  ```html
+  <body data-toggle data-toggle-group="group name here">
+  ```
+  
 Now, if you don't see any change when you click on an element that have data-toggle attribute, there are two possibilities:
   * Your selector is bad or doesn't target anything
   * You didn't noticed that data-toggle isn't using show() and hide() functions of jQuery, but simply add and remove the class "active" from the toggle element and the targeted ones.
@@ -66,3 +72,5 @@ Enjoy!
   });
   </script>
   ```
+
+  * Implement multiple groups
