@@ -74,3 +74,7 @@ Enjoy!
   ```
 
   * Implement multiple groups
+  * Some cases of click/touch events are undesirable, allow script to remove them (like click on <a> inside data-toggle)
+  * Allow binding of click/touch events with JS only
+
+Those last two points need to use an init function to implement.
