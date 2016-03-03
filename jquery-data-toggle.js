@@ -124,6 +124,7 @@
 				var target = $(this).data('toggle');
 				var groups = $(this).data('toggle-group');
 				var events = $(this).data('toggle-event');
+				var classes = $(this).data('toggle-class');
 				$(this).dataToggle(target, {
 					groups: groups,
 					events: events
