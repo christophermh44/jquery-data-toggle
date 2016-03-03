@@ -1,4 +1,4 @@
-# jquery-data-toggle
+# jquery-data-toggle (beta)
 
 A small lib that allows some elements to toggle classes on other ones, just by clicking on/touching the trigger.
 
