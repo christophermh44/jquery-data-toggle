@@ -1,5 +1,6 @@
 # jquery-data-toggle
-A very small lib that allows some elements to toggle other ones.
+
+A small lib that allows some elements to toggle classes on other ones, just by clicking on/touching the trigger.
 
 ## Really short documentation
 
@@ -9,7 +10,14 @@ A very small lib that allows some elements to toggle other ones.
   <script src="jquery-data-toggle.js"></script>
   ```
   
+  and somewhere else:
+  
+  ```html
+  <script>$.dataToggle.init()</script>
+  ```
+  
   Yes, you also need to have jQuery inside your page.
+  
   2. Add some attributes to your code:
   
   ```html
@@ -32,9 +40,9 @@ A very small lib that allows some elements to toggle other ones.
   jquery-data-toggle is also able to toggle many targets at once.
 
   ```html
-  <button type="button" data-toggle=".foo">Bar</button>
+  <button type="button" data-toggle=".foo, .bar">Bar</button>
   <div class="foo">Foo</div>
-  <div class="foo">Bar</div>
+  <div class="bar">Bar</div>
   <div class="foo">Baz</div>
   ```
   
@@ -44,37 +52,52 @@ A very small lib that allows some elements to toggle other ones.
   <button type="button" data-toggle=".menu--first" data-toggle-group="menus">Open first menu</button>
   <button type="button" data-toggle=".menu--second" data-toggle-group="menus">Open second menu</button>
   <button type="button" data-toggle=".menu--third" data-toggle-group="menus">Open third menu</button>
-  ...
+  …
   ```
   
-  **Brotip #2**: If you want to close all opened elements by clicking on the body, just add this to the body:
+  You can make the elements belong to many groups by separating their names with a space.
+  
+  **Brotip #2**: If you want to close all opened elements by clicking inside the body, just add this to the body:
   
   ```html
-  <body data-toggle data-toggle-group="group name here">
+  <body data-toggle data-toggle-group="group names here">
   ```
+  
+  Or, this example shows you how to close all active elements by clicking inside the body:
+  
+  ```html
+  <body data-toggle=".active">
+  ```
+  
+  4. You can edit the classes that will be toggled:
+  
+  ```html
+  <button data-toggle="…" data-toggle-class="enabled">Enable</button>
+  ```
+  
+  Many classes can be toggled, separate them with a space.
+
+  5. You can trigger events when an element is toggled:
+
+  ```html
+  <button data-toggle="#menu" data-toggle-event="dt-enabled">Enable</button>
+  …
+  <script>
+  $('#menu').on('dt-enabled', function(ev, status) {
+    alert('so, you was just ' + status ? 'showing' : 'hiding' + ' me!');
+  });
+  ```
+  
+  Many events can be triggered, separate them with a space. Keep in mind that events are triggered on target elements from DOM, not on triggerer ones.
   
 Now, if you don't see any change when you click on an element that have data-toggle attribute, there are two possibilities:
   * Your selector is bad or doesn't target anything
-  * You didn't noticed that data-toggle isn't using show() and hide() functions of jQuery, but simply add and remove the class "active" from the toggle element and the targeted ones.
+  * You didn't noticed that data-toggle isn't using show() and hide() functions of jQuery, but simply add and remove classes from/to the toggle element and the targeted ones.
   
 Enjoy!
 
 ## Todo
 
-  * Trigger custom event if needed, by adding an attribute like that:
-  
-  ```html
-  <button type="button" data-toggle="#menu" data-toggle-event="open-menu">Open menu</button>
-  ...
-  <script>
-  $(???).on('open-menu', function(e){
-    // ...
-  });
-  </script>
-  ```
+  * Function to refresh all binds
 
-  * Implement multiple groups
-  * Some cases of click/touch events are undesirable, allow script to remove them (like click on <a> inside data-toggle)
-  * Allow binding of click/touch events with JS only
-
-Those last two points need to use an init function to implement.
+Let me know if you experiment some bugs, and feel free to suggest me some improvments!
