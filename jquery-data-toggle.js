@@ -1,65 +1,136 @@
-/*
-TODO Some cases of click/touch events are undesirable, allow script to remove them (like click on <a> inside data-toggle)
-TODO Allow binding of click/touch events with JS only
-*/
-;(function($){
-  'use strict';
-	$(window).on('load', function() {
-		var touching = false;
-		var tolerance = 10; // because sometimes, it's hard to touch without moving fingers
-		var startX = null;
-		var startY = null;
-		$(document).on('touchstart', function(e) {
-			startX = e.originalEvent.touches[0].screenX;
-			startY = e.originalEvent.touches[0].screenY;
-			touching = false;
+// TODO - Create function to refresh all binds
+
+;(function($) {
+	'use strict';
+
+	var touching = false;
+	var startX = null;
+	var startY = null;
+
+	$.dataToggle = $.fn.dataToggle = function(target, options) {
+		this.each(function() {
+			$.dataToggle.bind($(this), target, options);
 		});
-		$(document).on('touchmove', function(e) {
-			touching = true;
-		});
-		var evt = 'ontouchend' in document ? 'touchend' : 'mouseup';
-		$(document).on(evt, '[data-toggle]', function(e) {
-			if (touching) {
+		return this;
+	};
+
+	$.fn.dataToggle.settings = {
+		allowTouching: true,
+		touchTolerance: 10,
+		activeClasses: ['active'],
+		preventingCallback: function() {
+			return false;
+		}
+	};
+
+	$.fn.dataToggle.bind = function(trigger, target, options) {
+		if (typeof trigger === "string") {
+			trigger = $(trigger);
+		}
+
+		trigger.on($.fn.dataToggle.settings.triggeringEvent, function(e) {
+			if ($.fn.dataToggle.settings.allowTouching && touching) {
 				var endX = e.originalEvent.changedTouches[0].screenX;
 				var endY = e.originalEvent.changedTouches[0].screenY;
-				var delta = Math.sqrt((endX - startX) * (endX - startX) + (endY - startY) * (endY - startY)); // distance
-				if (delta > tolerance) {
+				var delta = Math.sqrt((endX - startX) * (endX - startX) + (endY - startY) * (endY - startY));
+				if (delta > $.dataToggle.settings.tolerance) {
 					return;
 				}
 			}
-			var $target = $(e.target);
+
 			var $that = $(this);
-			var el = $(this).attr('data-toggle');
-			var $el = $(el);
-			var group = $(this).attr('data-toggle-group') || '';
-			var className = $(this).attr('data-toggle-class') || 'active';
+			var $target = typeof target === "string" ? $(target) : target;
+			var groups = (typeof options.groups === "string" ? options.groups.split(' ') : options.groups) || [];
+			var events = (typeof options.events === "string" ? options.events.split(' ') : options.events) || [];
+			var classes = (typeof options.classes === "string" ? options.classes.split(' ') : options.classes) || $.fn.dataToggle.settings.activeClasses;
+
 			var contained = false;
-			if ($el.hasClass('active')) {
-				for (var i = 0; i < $el.length; ++i) {
-					if ($.contains($el[i], $target[0]) && !$target.is($($el[i])) && !$target.parent().is($($el[i]))) {
+			if ($that.is('.' + classes.join(', .'))) {
+				for (var i = 0; i < $that.length; ++i) {
+					var contains = false;
+					for (var j = 0; j < $target.length; ++j) {
+						if ($.contains($that[i], $target[j])) {
+							contains = true;
+						}
+					}
+					if (contains && !$target.is($($that[i])) && !$target.parent().is($($that[i]))) {
 						contained = true;
 					}
 				}
 			}
+
 			if (
 				$target.is('a') || $target.parent().is('a')
 				|| (contained && !$target.is('[data-toggle]') && !$target.parent().is('[data-toggle]'))
-			) { // fallback pour les cas particuliers à bugs…
+				|| $.fn.dataToggle.settings.preventingCallback()
+			) {
 				return true;
 			}
+
 			e.preventDefault();
-			if (!!group) {
-				$('[data-toggle-group="' + group + '"]').each(function() {
-					if (! $(this).is($that)) {
-						$(this).removeClass(className);
-						var $dest = $(this).attr('data-toggle');
-						$($dest).removeClass(className);
-					}
-				});
+			var className = classes.join(' ');
+
+			if (groups.length > 0) {
+				for (var i = 0; i < groups.length; ++i) {
+					var group = groups[i];
+					$('[data-toggle-group="' + group + '"]').each(function() {
+						if (! $(this).is($that)) {
+							$(this).removeClass(className);
+							var $dest = $(this).data('toggle');
+							$($dest).removeClass(className);
+							for (var j = 0; j < events.length; ++j) {
+								var ev = events[j];
+								$($dest).trigger(ev, [false]);
+							}
+						}
+					});
+				}
 			}
-			$el.toggleClass(className);
-			$('[data-toggle="' + el + '"]').toggleClass(className, $el.filter('.' + className).length > 0);
+
+			$target.toggleClass(className);
+			$('[data-toggle="' + $that.data('toggle') + '"]').each(function() {
+				var status = $target.filter('.' + className).length > 0;
+				$that[status ? 'addClass' : 'removeClass'](className);
+				for (var j = 0; j < events.length; ++j) {
+					var ev = events[j];
+					$target.trigger(ev, [status]);
+				}
+			});
+
 			return false;
 		});
-	});
+	};
+
+	$.fn.dataToggle.init = function(params) {
+		$.fn.dataToggle.settings = $.extend($.fn.dataToggle.settings, params);
+		$.fn.dataToggle.settings.triggeringEvent = $.fn.dataToggle.settings.allowTouching && 'ontouchend' in document
+			? 'touchend'
+			: 'mouseup';
+
+		if ($.fn.dataToggle.settings.allowTouching) {
+			$(document).on('touchstart', function(e) {
+				startX = e.originalEvent.touches[0].screenX;
+				startY = e.originalEvent.touches[0].screenY;
+				touching = false;
+			});
+
+			$(document).on('touchmove', function(e) {
+				touching = true;
+			});
+		}
+
+		$(window).on('load', function() {
+			$('[data-toggle]').each(function() {
+				var target = $(this).data('toggle');
+				var groups = $(this).data('toggle-group');
+				var events = $(this).data('toggle-event');
+				$(this).dataToggle(target, {
+					groups: groups,
+					events: events
+				});
+			});
+		});
+	};
 })(jQuery);
+
+// $.dataToggle.init();
