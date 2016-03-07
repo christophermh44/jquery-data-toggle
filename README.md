@@ -4,6 +4,16 @@ A small lib that allows some elements to toggle classes on other ones, just by c
 
 ## Really short documentation
 
+  0. Installation
+  
+  You can install jquery-data-toggle using bower or github:
+
+  ```bash
+  git clone https://github.com/christophermh44/jquery-data-toggle
+  # OR
+  bower install jquery-data-toggle
+  ```
+
   1. Include this in your page:
   
   ```html
