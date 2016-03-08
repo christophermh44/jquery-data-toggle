@@ -90,7 +90,7 @@
 			$target.toggleClass(className);
 			$('[data-toggle="' + $that.data('toggle') + '"]').each(function() {
 				var status = $target.filter('.' + className).length > 0;
-				$that[status ? 'addClass' : 'removeClass'](className);
+				$(this)[status ? 'addClass' : 'removeClass'](className);
 				for (var j = 0; j < events.length; ++j) {
 					var ev = events[j];
 					$target.trigger(ev, [status]);
