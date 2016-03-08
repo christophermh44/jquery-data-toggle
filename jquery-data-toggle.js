@@ -127,7 +127,8 @@
 				var classes = $(this).data('toggle-class');
 				$(this).dataToggle(target, {
 					groups: groups,
-					events: events
+					events: events,
+					classes: classes
 				});
 			});
 		});
