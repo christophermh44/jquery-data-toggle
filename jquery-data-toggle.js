@@ -40,29 +40,30 @@
 
 			var $that = $(this);
 			var $target = typeof target === "string" ? $(target) : target;
+			var $el = $(e.target);
 			var groups = (typeof options.groups === "string" ? options.groups.split(' ') : options.groups) || [];
 			var events = (typeof options.events === "string" ? options.events.split(' ') : options.events) || [];
 			var classes = (typeof options.classes === "string" ? options.classes.split(' ') : options.classes) || $.fn.dataToggle.settings.activeClasses;
 
 			var contained = false;
-			if ($that.is('.' + classes.join(', .'))) {
-				for (var i = 0; i < $that.length; ++i) {
+			if ($el.is('.' + classes.join(', .'))) {
+				for (var i = 0; i < $el.length; ++i) {
 					var contains = false;
 					for (var j = 0; j < $target.length; ++j) {
-						if ($.contains($that[i], $target[j])) {
+						if ($.contains($el[i], $target[j])) {
 							contains = true;
 						}
 					}
-					if (contains && !$target.is($($that[i])) && !$target.parent().is($($that[i]))) {
+					if (contains && !$target.is($($that[i])) && !$target.parent().is($($el[i]))) {
 						contained = true;
 					}
 				}
 			}
 
 			if (
-				$target.is('a') || $target.parent().is('a')
-				|| (contained && !$target.is('[data-toggle]') && !$target.parent().is('[data-toggle]'))
-				|| $.fn.dataToggle.settings.preventingCallback()
+				$el.is('a') || $el.parent().is('a')
+				|| (contained && !$el.is('[data-toggle]') && !$el.parent().is('[data-toggle]'))
+				|| $.fn.dataToggle.settings.preventingCallback($that, $target, $el, options)
 			) {
 				return true;
 			}
@@ -134,5 +135,3 @@
 		});
 	};
 })(jQuery);
-
-// $.dataToggle.init();
