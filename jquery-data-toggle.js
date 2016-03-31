@@ -28,7 +28,7 @@
 			trigger = $(trigger);
 		}
 
-		trigger.on($.fn.dataToggle.settings.triggeringEvent, function(e) {
+		var triggerDataToggle = function(e) {
 			if ($.fn.dataToggle.settings.allowTouching && touching) {
 				var endX = e.originalEvent.changedTouches[0].screenX;
 				var endY = e.originalEvent.changedTouches[0].screenY;
@@ -46,11 +46,11 @@
 			var classes = (typeof options.classes === "string" ? options.classes.split(' ') : options.classes) || $.fn.dataToggle.settings.activeClasses;
 
 			var contained = false;
-			if ($el.is('.' + classes.join(', .'))) {
+			if ($target.is('.' + classes.join(', .'))) {
 				for (var i = 0; i < $el.length; ++i) {
 					var contains = false;
 					for (var j = 0; j < $target.length; ++j) {
-						if ($.contains($el[i], $target[j])) {
+						if ($.contains($target[j], $el[i])) {
 							contains = true;
 						}
 					}
@@ -99,6 +99,15 @@
 			});
 
 			return false;
+		};
+
+		trigger.on($.fn.dataToggle.settings.triggeringEvent, triggerDataToggle);
+		trigger.on('keyup', function(e) {
+			if (e.which == 13 || e.keyCode == 13) {
+				e.preventDefault();
+				e.stopPropagation();
+				triggerDataToggle.call(this, e);
+			}
 		});
 	};
 
