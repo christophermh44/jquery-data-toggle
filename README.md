@@ -114,8 +114,6 @@ Now, if you don't see any change when you click on an element that have data-tog
   
 Enjoy!
 
-## Todo
-
-  * Function to refresh all binds
+## Just a few last words…
 
 Let me know if you experiment some bugs, and feel free to suggest me some improvments!
