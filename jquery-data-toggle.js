@@ -91,6 +91,8 @@
     };
 
     $.fn.dataToggle.bind = function(trigger, target, options) {
+        options = options || {groups: null, events: null, classes: null};
+        
         if (typeof trigger === "string") {
             trigger = $(trigger);
         }
