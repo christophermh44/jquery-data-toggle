@@ -100,6 +100,14 @@ A small lib that allows some elements to toggle classes on other ones, just by c
   
   Many events can be triggered, separate them with a space. Keep in mind that events are triggered on target elements from DOM, not on triggerer ones.
   
+  6. Additionnal use: javascript functions
+  
+  You can also manage your bindings with Javascript. Here are the functions provided:
+  
+  * **$.dataToggle.bind(trigger, target[, options])**: manual binding of a toggle
+  * **$.dataToggle.unbind([triggerExpression])**: unbind a specific toggle with trigger expression, or all bounded toggles if no parameter is set
+  * **$.dataToggle.refresh()**: function that refreshes all binds (unbind all, then rebind all)
+  
 Now, if you don't see any change when you click on an element that have data-toggle attribute, there are two possibilities:
   * Your selector is bad or doesn't target anything
   * You didn't noticed that data-toggle isn't using show() and hide() functions of jQuery, but simply add and remove classes from/to the toggle element and the targeted ones.
