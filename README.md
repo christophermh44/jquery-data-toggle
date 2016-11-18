@@ -1,5 +1,7 @@
 # jquery-data-toggle (beta)
 
+This repo is discontinued! Please use https://github.com/christophermh44/data-toggle-js
+
 A small lib that allows some elements to toggle classes on other ones, just by clicking on/touching the trigger.
 
 ## Really short documentation
